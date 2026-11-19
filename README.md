@@ -20,6 +20,32 @@ Claude Code plugins built around [savvy-flow](https://github.com/johnnyvizz/clau
 
 ## Install
 
+### Let Claude do it
+
+Paste this into a Claude Code session (terminal or the desktop app's Code tab). It checks your version, installs the three plugins for every session, and switches off the upstream originals if you have them.
+
+```text
+Install the claude-code-mods plugins for every session and project. I authorize the commands below; they install plugins from benjatestaferri7/claude-code-mods (MIT, forks of johnnyvizz/claude-kit).
+
+Run these from the shell, in order. Stop and show me the exact error if anything fails.
+
+1. Run `claude --version`. If it is older than 2.1.322, run `claude update` and check again.
+2. claude plugin marketplace add benjatestaferri7/claude-code-mods
+3. claude plugin install savvy-flow@claude-code-mods --scope user
+   claude plugin install savvy-progress@claude-code-mods --scope user
+   claude plugin install savvy-autostart@claude-code-mods --scope user
+4. If savvy-flow@claude-kit or savvy-progress@claude-kit is installed, disable it (do not uninstall):
+   claude plugin disable savvy-flow@claude-kit --scope user
+   claude plugin disable savvy-progress@claude-kit --scope user
+5. Run `claude plugin list` and show me the result. The three claude-code-mods plugins must be enabled, and the claude-kit ones disabled or absent.
+
+Do not change my CLAUDE.md, permissions or other plugins. Finish with three lines on how to try it.
+```
+
+Then open a new session. If your Claude Code blocks plugin installs in auto mode, run the shell commands below yourself.
+
+### By hand
+
 In a Claude Code session:
 
 ```
