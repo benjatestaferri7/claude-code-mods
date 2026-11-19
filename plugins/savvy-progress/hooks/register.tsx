@@ -356,19 +356,10 @@ const barText = (f: Flow, width: number): string => {
 // Agents panel: every subagent of the session, plus the tasks the flow planned.
 
 
-const TIER_MODEL: Record<string, [model: string, effort: string]> = {
-  fable: ['Fable', 'high'],
-  heavy: ['Opus', 'xhigh'],
-  careful: ['Opus', 'high'],
-  medium: ['Opus', 'medium'],
-  light: ['Opus', 'low'],
-}
-
-// "Opus · xhigh", with the effort word in the panel's language; '' for an unknown tier.
-const tierModel = (tier: string): string => {
-  const m = TIER_MODEL[tier]
-  return m ? `${m[0]} · ${effortWord(m[1])}` : ''
-}
+// A planned task has no run yet, so its model and effort are unknown: with the
+// inherit variant of savvy-flow every worker takes the session's. Planned rows
+// show none; a running or finished row shows what the run actually reported.
+const tierModel = (_tier: string): string => ''
 
 // "Opus 5.5 · low" for a run, or just the model when no effort was seen.
 const runModel = (a: AgentRun): string => (a.effort ? `${modelName(a.model)} · ${effortWord(a.effort)}` : modelName(a.model))
@@ -613,7 +604,7 @@ const plannedSvg = (W: number, p: Planned): string => {
   const tier = p.tier in TIER_COLOR ? p.tier : 'other'
   const color = colorOf(tier)
   const textW = W - 42 - 22
-  const meta = [tierModel(tier)]
+  const meta = [tierModel(tier)].filter(Boolean)
   if (p.after.length) meta.push(`${tr().after} ${p.after.join(', ')}`)
   return svg(
     W,
@@ -1078,7 +1069,8 @@ export const register: Register = (on, options) => {
                   </Text>
                   <Text dimColor wrap="truncate-end">
                     {'  '}
-                    {tierWord(tier)} · {tierModel(tier)}
+                    {tierWord(tier)}
+                    {tierModel(tier) ? ` · ${tierModel(tier)}` : ''}
                     {pl.after.length ? ` · ${s.after} ${pl.after.join(', ')}` : ''}
                   </Text>
                 </Box>

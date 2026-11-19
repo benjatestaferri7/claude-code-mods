@@ -1,6 +1,6 @@
 # claude-code-mods
 
-Two Claude Code mods for [savvy-flow](https://github.com/johnnyvizz/claude-kit): an agents panel where each subagent wears a costume for its role, and a prompt prefill so a new session is one task description away from a flow.
+Claude Code plugins built around [savvy-flow](https://github.com/johnnyvizz/claude-kit): an agents panel where each subagent wears a costume for its role, a prompt prefill so a new session is one task description away from a flow, and a savvy-flow variant whose workers run on the session's model and effort.
 
 ![Agents panel mock-up with animated role costumes](assets/costumes-demo.gif)
 
@@ -10,22 +10,21 @@ Two Claude Code mods for [savvy-flow](https://github.com/johnnyvizz/claude-kit):
 
 | Plugin | What it does | Version |
 | --- | --- | --- |
-| [`savvy-progress`](plugins/savvy-progress) | Fork of johnnyvizz's progress bar and agents panel. Adds role-based animated costumes. | 1.3.0-roles |
+| [`savvy-flow`](plugins/savvy-flow) | Fork of johnnyvizz's orchestrated flow. Workers inherit the session's model and effort instead of a fixed tier. | 1.2.0-inherit |
+| [`savvy-progress`](plugins/savvy-progress) | Fork of johnnyvizz's progress bar and agents panel. Adds role-based animated costumes. | 1.3.1-roles |
 | [`savvy-autostart`](plugins/savvy-autostart) | Pre-fills the prompt with `/savvy-flow:savvy-flow ` so pressing Enter runs the command. | 0.1.0 |
 
 ## Requirements
 
 - A recent Claude Code. Tested on 2.1.322 and 2.1.325; 2.1.270 rejects the plugin manifest. Run `claude update` if the install fails with a manifest error.
-- `savvy-flow` from [johnnyvizz/claude-kit](https://github.com/johnnyvizz/claude-kit). It is not part of this repo.
 
 ## Install
 
 In a Claude Code session:
 
 ```
-/plugin marketplace add johnnyvizz/claude-kit
-/plugin install savvy-flow@claude-kit
 /plugin marketplace add benjatestaferri7/claude-code-mods
+/plugin install savvy-flow@claude-code-mods
 /plugin install savvy-progress@claude-code-mods
 /plugin install savvy-autostart@claude-code-mods
 ```
@@ -33,18 +32,20 @@ In a Claude Code session:
 Or from a shell:
 
 ```sh
-claude plugin marketplace add johnnyvizz/claude-kit
-claude plugin install savvy-flow@claude-kit --scope user
 claude plugin marketplace add benjatestaferri7/claude-code-mods
+claude plugin install savvy-flow@claude-code-mods --scope user
 claude plugin install savvy-progress@claude-code-mods --scope user
 claude plugin install savvy-autostart@claude-code-mods --scope user
 ```
 
-If you already have the original `savvy-progress` installed, disable it. Both draw the same panel and register the same tools:
+If you already have the originals from `johnnyvizz/claude-kit`, disable them. They register the same skill, agents, panel and tools:
 
 ```sh
+claude plugin disable savvy-flow@claude-kit
 claude plugin disable savvy-progress@claude-kit
 ```
+
+Want the upstream fixed tiers (Opus/Fable at low to xhigh effort) instead? Install `savvy-flow@claude-kit` and skip this repo's `savvy-flow`.
 
 In the desktop app: click **+** next to the prompt box, open **Plugins**, choose **Add marketplace**, and enter `benjatestaferri7/claude-code-mods`. Then install the plugins from the list.
 
@@ -94,14 +95,14 @@ Agents stored by older versions have no role and keep their tier costume. `prefe
 
 ## Limitations
 
-- savvy-flow spawns Opus and Fable workers, so a flow costs real tokens. The cost figures in the panel are estimates from token counts and a built-in price table, not a bill.
+- A flow runs several workers on the session model, so it costs real tokens: on Fable, every worker bills at Fable rates. The cost figures in the panel are estimates from token counts and a built-in price table, not a bill.
 - The fork does not receive upstream updates automatically. Changes from `johnnyvizz/claude-kit` have to be merged by hand.
 - The mods draw in the Claude Code terminal UI and desktop app. They do not draw in the VS Code extension's chat panel.
 - Costumes are decided at spawn time. A task whose description gives no clear role gets the tier costume.
 
 ## Credits
 
-`savvy-flow` and the original `savvy-progress` (progress bar, agents panel, tools, tier costumes) are by [johnnyvizz](https://github.com/johnnyvizz), from [claude-kit](https://github.com/johnnyvizz/claude-kit), MIT. This repo adds the role costumes and `savvy-autostart`.
+`savvy-flow` and the original `savvy-progress` (progress bar, agents panel, tools, tier costumes) are by [johnnyvizz](https://github.com/johnnyvizz), from [claude-kit](https://github.com/johnnyvizz/claude-kit), MIT. This repo adds the role costumes, the inherit variant of `savvy-flow`, and `savvy-autostart`.
 
 ## License
 
