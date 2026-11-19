@@ -1,0 +1,18 @@
+{
+  "name": "savvy-autostart",
+  "version": "0.1.0",
+  "description": "Pre-fills the prompt box with /savvy-flow:savvy-flow at session start and after each turn, so a task typed next runs through the savvy-flow skill. Toggle with /autostart.",
+  "author": {
+    "name": "benjatestaferri7",
+    "url": "https://github.com/benjatestaferri7"
+  },
+  "userConfig": {
+    "command": {
+      "type": "string",
+      "title": "Command to pre-fill",
+      "description": "Slash command placed in an empty prompt box, with or without the leading slash",
+      "default": "/savvy-flow:savvy-flow"
+    }
+  },
+  "license": "MIT"
+}

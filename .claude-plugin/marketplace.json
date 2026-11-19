@@ -1,0 +1,21 @@
+{
+  "name": "claude-code-mods",
+  "owner": { "name": "benjatestaferri7", "url": "https://github.com/benjatestaferri7" },
+  "metadata": { "description": "Claude Code mods for savvy-flow: role-based agent costumes and a prompt prefill." },
+  "plugins": [
+    {
+      "name": "savvy-progress",
+      "source": "./plugins/savvy-progress",
+      "description": "Fork of johnnyvizz's savvy-progress: progress bar and agents panel, with role-based animated costumes.",
+      "version": "1.3.0-roles",
+      "category": "mod"
+    },
+    {
+      "name": "savvy-autostart",
+      "source": "./plugins/savvy-autostart",
+      "description": "Pre-fills the prompt box with /savvy-flow:savvy-flow so the command runs on Enter.",
+      "version": "0.1.0",
+      "category": "mod"
+    }
+  ]
+}
