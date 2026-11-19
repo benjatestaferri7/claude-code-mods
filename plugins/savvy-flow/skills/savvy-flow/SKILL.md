@@ -13,7 +13,7 @@ Task from the user: $ARGUMENTS
 
 ## 0. Preconditions
 
-- The flow is designed for a strong orchestrator model at high effort (Fable high is the reference setup). Do not try to detect or verify the session's model or effort — you cannot see the effort level. Whatever the session runs on is the user's deliberate choice; just orchestrate.
+- The orchestrator is whatever model the user picked for the session (Fable is the reference setup; Opus or Sonnet work too). The session model is the ceiling: workers run on it or on a cheaper model, never a stronger one (section 3). Find the session model's family (fable, opus, sonnet or haiku) in your system prompt, where it names the model you are powered by. If it does not say, treat the session as Opus. Do not try to detect the effort level; workers always run at medium effort, set in their definitions.
 - Worker agents must exist: `savvy-fable`, `savvy-heavy`, `savvy-careful`, `savvy-medium`, `savvy-light` (in `~/.claude/agents/`, or shipped with the savvy-flow plugin, in which case the Agent tool lists them as `savvy-flow:savvy-careful` and so on). If the Agent tool does not list them, stop and tell the user.
 
 ## Progress bar
@@ -65,15 +65,26 @@ Design decisions are yours. Workers never invent UI, with one exception below.
 
 ## 3. Tiering
 
-Pick the tier whose brief style fits the task. In this fork every worker inherits the session model and effort (`model: inherit`, no `effort`), so tiers differ only in their instructions and scope, not in model or effort. Do not pass `model` or `effort` when spawning a worker.
+Pick the tier whose brief style fits the task. Every worker runs at **medium effort** (set in its definition; never pass `effort`). The tier also sets the worker's **model**: each tier has a model cap, and the worker runs on the cap or on the session model, whichever is cheaper. The order from strongest to cheapest is fable > opus > sonnet > haiku. A worker never runs on a model stronger than the session's.
 
-| Tier | Agent | Model / effort | Use for |
-|------|-------|----------------|---------|
-| Fable | `savvy-fable` | Session / session | "Hardest problems": very complex logic (subtle algorithms, concurrency, many interacting states), hard bugs that resist ordinary debugging or survived a Heavy investigation; targeted design features, only when the user asks (section 2) |
-| Heavy | `savvy-heavy` | Session / session | "Understand and find": unfamiliar or messy code, unclear root cause, non-obvious architecture, large contexts, anything where a wrong first approach is expensive |
-| Careful | `savvy-careful` | Session / session | "Do it right": the approach is clear but execution is delicate. Multi-file refactors, fixes that must preserve invariants, logic with many edge cases, concurrency |
-| Medium | `savvy-medium` | Session / session | Standard feature work, bug fixes with a known cause, changes confined to a few files with clear requirements |
-| Light | `savvy-light` | Session / session | Mechanical edits, renames, boilerplate, config, small isolated fixes, running builds/tests and reporting |
+| Tier | Agent | Model cap | Use for |
+|------|-------|-----------|---------|
+| Fable | `savvy-fable` | session | "Hardest problems": very complex logic (subtle algorithms, concurrency, many interacting states), hard bugs that resist ordinary debugging or survived a Heavy investigation; targeted design features, only when the user asks (section 2) |
+| Heavy | `savvy-heavy` | opus | "Understand and find": unfamiliar or messy code, unclear root cause, non-obvious architecture, large contexts, anything where a wrong first approach is expensive |
+| Careful | `savvy-careful` | opus | "Do it right": the approach is clear but execution is delicate. Multi-file refactors, fixes that must preserve invariants, logic with many edge cases, concurrency |
+| Medium | `savvy-medium` | sonnet | Standard feature work, bug fixes with a known cause, changes confined to a few files with clear requirements |
+| Light | `savvy-light` | haiku | Mechanical edits, renames, boilerplate, config, small isolated fixes, running builds/tests and reporting |
+
+What each tier runs on, by session model:
+
+| Session | Fable | Heavy | Careful | Medium | Light |
+|---------|-------|-------|---------|--------|-------|
+| fable | fable | opus | opus | sonnet | haiku |
+| opus | opus | opus | opus | sonnet | haiku |
+| sonnet | sonnet | sonnet | sonnet | sonnet | haiku |
+| haiku | haiku | haiku | haiku | haiku | haiku |
+
+When spawning a worker, pass that model as the Agent tool's `model` parameter (`fable`, `opus`, `sonnet` or `haiku`), every time, including return rounds. If the Agent tool does not accept a `model` parameter, spawn without it: the worker then runs on the session model, and you say so once in the plan.
 
 Heuristics:
 - Uncertain between two tiers → take the higher one. Exception: Fable is a reserve tier; pick it only when the task clearly meets its criteria, otherwise Heavy.
@@ -83,7 +94,7 @@ Heuristics:
 
 ## 4. Delegate
 
-- Use the Agent tool with `subagent_type` = the tier agent name exactly as the Agent tool lists it (`savvy-careful` or `savvy-flow:savvy-careful`). Run independent tasks in parallel in one message; chain dependent ones.
+- Use the Agent tool with `subagent_type` = the tier agent name exactly as the Agent tool lists it (`savvy-careful` or `savvy-flow:savvy-careful`) and `model` = the tier's model for this session (section 3). Run independent tasks in parallel in one message; chain dependent ones.
 - Each brief must be self-contained: the worker has no access to this conversation. Include file paths, the decided design specs, constraints from CLAUDE.md that matter, and the exact verification expected.
 - Keep briefs tight. Do not paste the whole plan; paste this task.
 - Do not implement in parallel with workers. While they run, prepare the next briefs or the review checklist.

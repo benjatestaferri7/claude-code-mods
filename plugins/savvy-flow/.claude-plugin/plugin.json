@@ -1,7 +1,7 @@
 {
   "name": "savvy-flow",
-  "version": "1.2.0-inherit",
-  "description": "Fork of johnnyvizz savvy-flow where workers inherit the session model and effort. Orchestrated delivery flow: the session model plans, owns design and reviews; five tiered worker subagents implement. Pairs with the savvy-progress mod for a live progress bar and agents panel.",
+  "version": "1.3.0-capped",
+  "description": "Fork of johnnyvizz savvy-flow where workers run on cheaper models per tier, never above the session model, always at medium effort. Orchestrated delivery flow: the session model plans, owns design and reviews; five tiered worker subagents implement. Pairs with the savvy-progress mod for a live progress bar and agents panel.",
   "author": { "name": "benjatestaferri7 (fork of johnnyvizz)", "url": "https://github.com/benjatestaferri7" },
   "homepage": "https://github.com/benjatestaferri7/claude-code-mods/tree/main/plugins/savvy-flow",
   "repository": "https://github.com/benjatestaferri7/claude-code-mods",

@@ -5,14 +5,14 @@
     "url": "https://github.com/benjatestaferri7"
   },
   "metadata": {
-    "description": "Claude Code plugins around savvy-flow: an inherit-the-session variant, role-based agent costumes and a prompt prefill."
+    "description": "Claude Code plugins around savvy-flow: a session-capped variant, role-based agent costumes and a prompt prefill."
   },
   "plugins": [
     {
       "name": "savvy-flow",
       "source": "./plugins/savvy-flow",
-      "description": "Fork of johnnyvizz's savvy-flow: workers inherit the session model and effort.",
-      "version": "1.2.0-inherit",
+      "description": "Fork of johnnyvizz's savvy-flow: Fable (or any session model) orchestrates; workers run on cheaper models capped at the session model, always at medium effort.",
+      "version": "1.3.0-capped",
       "category": "skill"
     },
     {

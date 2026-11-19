@@ -1,6 +1,6 @@
 # claude-code-mods
 
-Claude Code plugins built around [savvy-flow](https://github.com/johnnyvizz/claude-kit): an agents panel where each subagent wears a costume for its role, a prompt prefill so a new session is one task description away from a flow, and a savvy-flow variant whose workers run on the session's model and effort.
+Claude Code plugins built around [savvy-flow](https://github.com/johnnyvizz/claude-kit): an agents panel where each subagent wears a costume for its role, a prompt prefill so a new session is one task description away from a flow, and a savvy-flow variant whose workers run on cheaper models capped at the session's, at medium effort.
 
 ![Agents panel mock-up with animated role costumes](assets/costumes-demo.gif)
 
@@ -10,7 +10,7 @@ Claude Code plugins built around [savvy-flow](https://github.com/johnnyvizz/clau
 
 | Plugin | What it does | Version |
 | --- | --- | --- |
-| [`savvy-flow`](plugins/savvy-flow) | Fork of johnnyvizz's orchestrated flow. Workers inherit the session's model and effort instead of a fixed tier. | 1.2.0-inherit |
+| [`savvy-flow`](plugins/savvy-flow) | Fork of johnnyvizz's orchestrated flow. The session model orchestrates; workers run on cheaper models per tier, capped at the session model, at medium effort. | 1.3.0-capped |
 | [`savvy-progress`](plugins/savvy-progress) | Fork of johnnyvizz's progress bar and agents panel. Adds role-based animated costumes. | 1.3.1-roles |
 | [`savvy-autostart`](plugins/savvy-autostart) | Pre-fills the prompt with `/savvy-flow:savvy-flow ` so pressing Enter runs the command. | 0.1.0 |
 
@@ -95,14 +95,14 @@ Agents stored by older versions have no role and keep their tier costume. `prefe
 
 ## Limitations
 
-- A flow runs several workers on the session model, so it costs real tokens: on Fable, every worker bills at Fable rates. The cost figures in the panel are estimates from token counts and a built-in price table, not a bill.
+- A flow runs several workers, so it costs real tokens. Workers run on cheaper models than a Fable session (Opus, Sonnet, Haiku per tier), but `savvy-fable` tasks still bill at the session rate. The cost figures in the panel are estimates from token counts and a built-in price table, not a bill.
 - The fork does not receive upstream updates automatically. Changes from `johnnyvizz/claude-kit` have to be merged by hand.
 - The mods draw in the Claude Code terminal UI and desktop app. They do not draw in the VS Code extension's chat panel.
 - Costumes are decided at spawn time. A task whose description gives no clear role gets the tier costume.
 
 ## Credits
 
-`savvy-flow` and the original `savvy-progress` (progress bar, agents panel, tools, tier costumes) are by [johnnyvizz](https://github.com/johnnyvizz), from [claude-kit](https://github.com/johnnyvizz/claude-kit), MIT. This repo adds the role costumes, the inherit variant of `savvy-flow`, and `savvy-autostart`.
+`savvy-flow` and the original `savvy-progress` (progress bar, agents panel, tools, tier costumes) are by [johnnyvizz](https://github.com/johnnyvizz), from [claude-kit](https://github.com/johnnyvizz/claude-kit), MIT. This repo adds the role costumes, the session-capped variant of `savvy-flow`, and `savvy-autostart`.
 
 ## License
 

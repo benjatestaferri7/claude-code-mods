@@ -356,9 +356,9 @@ const barText = (f: Flow, width: number): string => {
 // Agents panel: every subagent of the session, plus the tasks the flow planned.
 
 
-// A planned task has no run yet, so its model and effort are unknown: with the
-// inherit variant of savvy-flow every worker takes the session's. Planned rows
-// show none; a running or finished row shows what the run actually reported.
+// A planned task has no run yet, so its model is unknown: the savvy-flow fork picks
+// each worker's model from the session model when it spawns it. Planned rows show
+// none; a running or finished row shows what the run actually reported.
 const tierModel = (_tier: string): string => ''
 
 // "Opus 5.5 · low" for a run, or just the model when no effort was seen.
